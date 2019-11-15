@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import * as $ from "jquery";
+import axios from 'axios';
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
 import hash from "./hash";
 import Player from "./Player";
 import logo from "./logo.svg";
 import "./App.css";
+import Checkbox from "./Checkbox";
 
 class App extends Component {
   constructor() {
@@ -26,34 +27,33 @@ class App extends Component {
   }
   componentDidMount() {
     // Set token
-    let _token = hash.access_token;
 
+    let _token = hash.access_token;
     if (_token) {
       // Set token
-      this.setState({
-        token: _token
-      });
+      axios.defaults.headers['Authorization'] = "Bearer " + _token;
+      localStorage.setItem("spotify", _token);
+      this.setState({token: _token});
       this.getCurrentlyPlaying(_token);
     }
   }
 
   getCurrentlyPlaying(token) {
     // Make a call using the token
-    $.ajax({
-      url: "https://api.spotify.com/v1/me/player",
-      type: "GET",
-      beforeSend: (xhr) => {
-        xhr.setRequestHeader("Authorization", "Bearer " + token);
-      },
-      success: (data) => {
-        console.log("data", data);
+    //GET https://api.spotify.com/v1/me/player/currently-playing
+
+    axios.get("https://api.spotify.com/v1/me/player")
+      .then(response => {
+        console.log("response", response);
         this.setState({
-          item: data.item,
-          is_playing: data.is_playing,
-          progress_ms: data.progress_ms,
+          item: response.data.item,
+          is_playing: response.data.is_playing,
+          progress_ms: response.data.progress_ms,
         });
-      }
-    });
+      })
+      .catch(err => {
+        console.info(err);
+      });
   }
 
   render() {
@@ -61,7 +61,6 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           {!this.state.token && (
             <a
               className="btn btn--loginApp-link"
@@ -72,13 +71,16 @@ class App extends Component {
               Login to Spotify
             </a>
           )}
-          {this.state.token && (
+          
+           {this.state.token && (
             <Player
               item={this.state.item}
               is_playing={this.state.is_playing}
               progress_ms={this.progress_ms}
             />
           )}
+
+            <Checkbox />
         </header>
       </div>
     );
