@@ -3,9 +3,7 @@ import axios from 'axios';
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
 import hash from "./hash";
 import Player from "./Player";
-import logo from "./logo.svg";
 import "./App.css";
-import Checkbox from "./Checkbox";
 
 class App extends Component {
   constructor() {
@@ -23,7 +21,6 @@ class App extends Component {
       is_playing: "Paused",
       progress_ms: 0
     };
-    this.getCurrentlyPlaying = this.getCurrentlyPlaying.bind(this);
   }
   componentDidMount() {
     // Set token
@@ -33,35 +30,40 @@ class App extends Component {
       // Set token
       axios.defaults.headers['Authorization'] = "Bearer " + _token;
       localStorage.setItem("spotify", _token);
-      this.setState({token: _token});
-      this.getCurrentlyPlaying(_token);
+      this.getCurrentPlaylists(_token);
+      }
     }
-  }
 
-  getCurrentlyPlaying(token) {
-    // Make a call using the token
-    //GET https://api.spotify.com/v1/me/player/currently-playing
+    getEmbeddedLink = (type, id) => {
+      let startURL = 'https://open.spotify.com/embed/';
+      let URL = `${startURL}${type}/${id}`;
+      console.log(URL)
+      return URL;
+    }
 
-    axios.get("https://api.spotify.com/v1/me/player")
+    getCurrentPlaylists = (token) => {
+      axios.get("https://api.spotify.com/v1/me/playlists")
       .then(response => {
-        console.log("response", response);
+        let type = response.data.items[2].type;
+        let id = response.data.items[2].id;
+        let url = this.getEmbeddedLink(type, id);
         this.setState({
-          item: response.data.item,
-          is_playing: response.data.is_playing,
-          progress_ms: response.data.progress_ms,
+          data: response.data, 
+          items: response.data.items,
+          url, token
         });
       })
       .catch(err => {
         console.info(err);
-      });
-  }
-
+      });    
+    }
+  
   render() {
 
     return (
       <div className="App">
         <header className="App-header">
-          {!this.state.token && (
+          { !this.state.token && (
             <a
               className="btn btn--loginApp-link"
               href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
@@ -72,15 +74,16 @@ class App extends Component {
             </a>
           )}
           
-           {this.state.token && (
+           {localStorage.getItem('spotify') && (
             <Player
-              item={this.state.item}
-              is_playing={this.state.is_playing}
-              progress_ms={this.progress_ms}
+              data={this.state.data}
+              items={this.state.items}
+              url={this.state.url}
+
             />
           )}
 
-            <Checkbox />
+            {/* <Checkbox /> */}
         </header>
       </div>
     );
