@@ -69,7 +69,7 @@ class Player extends React.Component {
           </DropdownMenu>
         </Dropdown>
         <div className="App" toggle={this.props.toggle}>
-          <iframe title="spotify-playist" src={this.state.url} width="900" height="1240" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+          <iframe title="spotify-playist" src={this.state.url} width="600" height="760" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         </div>
         </>
       );
