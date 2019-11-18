@@ -11,23 +11,12 @@ class App extends Component {
     super();
     this.state = {
       loading: false,
-      loggedIn: false
     };
   }
   
-  toggle = event => {
-    if(localStorage.getItem('spotify')) {
-    localStorage.removeItem('spotify');
-    this.setState({ loggedIn: false });
-    } else {
-    localStorage.setItem('spotify', true);
-    this.setState({ loggedIn: true });
-    }
-}
-  
   render() {
       return (
-        <DynamicComp toggle={this.toggle} />
+        <DynamicComp />
       )
   }
 }

@@ -2,7 +2,6 @@ import React from "react";
 
 
 const NotLoggedIn = () => {
-  console.log(process.env.REACT_APP_SCOPES)
   return (
     <a
       className="btn btn--loginApp-link"
