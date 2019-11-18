@@ -5,7 +5,7 @@ const EmbeddedPlayer = (props) => {
     if(props.playlists) {
         return (
             <div>
-            <button class="btn" onClick={() => props.toggleToken()}>Logout</button>
+            <button className="btn" onClick={() => props.toggleToken()}>Logout</button>
         
             <Dropdown isOpen={props.dropdownOpen} toggle={props.toggle}>
               <DropdownToggle caret>
@@ -14,7 +14,7 @@ const EmbeddedPlayer = (props) => {
               <DropdownMenu>
                 {props.playlists.map(playlist => {
                   return (
-                    <DropdownItem onClick={() => props.embeddedLink(playlist.type, playlist.id)}>{playlist.name}</DropdownItem>
+                    <DropdownItem key={playlist.name + playlist.id} onClick={() => props.embeddedLink(playlist.type, playlist.id)}>{playlist.name}</DropdownItem>
                   )
                 })}
               </DropdownMenu>
