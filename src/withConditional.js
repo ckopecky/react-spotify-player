@@ -18,20 +18,24 @@ const withConditionalRender = FirstComp => SecondComp =>
             if (_token) {
               // Set token
               axios.defaults.headers['Authorization'] = "Bearer " + _token;
-              this.setState({token: _token});
+              this.setState({token: _token, loading: false});
               localStorage.setItem("spotify", _token);
+            } else {
+                this.setState({loading: false})
             }
         }
 
         toggleToken = event => {
-            if(localStorage.getItem('spotify')) localStorage.removeItem('spotify');
+            if(this.state.token) {
+                this.setState({token: null});
+            }
         
         }
         
         render() {
-            if(localStorage.getItem("spotify")) {
+            if(this.state.token) {
                 console.log("logged in")
-                return <FirstComp {...this.props} toggleToken={this.toggleToken()} token={this.state.token}/>;
+                return <FirstComp {...this.props} toggleToken={this.toggleToken} token={this.state.token}/>;
             } else {
                 console.log("logged out")
                 return <SecondComp {...this.props}/>;
