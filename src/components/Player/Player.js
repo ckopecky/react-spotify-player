@@ -1,7 +1,7 @@
 import React from "react";
 import "./Player.css";
 import axios from 'axios';
-import EmbeddedPlayer from "./EmbeddedPlayer";
+import EmbeddedPlayer from "../EmbeddedPlayer";
 
 class Player extends React.Component {
   state = {

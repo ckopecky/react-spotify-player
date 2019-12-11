@@ -2,6 +2,12 @@ import React from 'react';
 import hash from "./hash";
 import axios from 'axios';
 
+//componentDidMount === useEffect() hook
+    // query to endpoint on backend === useQuery()  
+    // if current user exists, set it on context || null
+    // if(!current user) then Landing Page
+    // else then HomePage
+
 
 
 const withConditionalRender = FirstComp => SecondComp => 
