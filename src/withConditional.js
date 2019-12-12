@@ -1,47 +1,39 @@
 import React from 'react';
-import hash from "./hash";
 import axios from 'axios';
 
-//componentDidMount === useEffect() hook
-    // query to endpoint on backend === useQuery()  
-    // if current user exists, set it on context || null
-    // if(!current user) then Landing Page
-    // else then HomePage
-
-
+const currUser = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_CURR_USER : process.env.REACT_APP_DEV_CURR_USER
 
 const withConditionalRender = FirstComp => SecondComp => 
     class WithConditionalRender extends React.Component {
         state = {
-            token: null,
-            loading: false
-        }
-        
-        componentDidMount() {
-            this.setState({loading: true})
-
-            let _token = hash.access_token;
-            if (_token) {
-              // Set token
-              axios.defaults.headers['Authorization'] = "Bearer " + _token;
-              this.setState({token: _token, loading: false});
-              localStorage.setItem("spotify", _token);
-            } else {
-                this.setState({loading: false})
-            }
+            loggedIn: false,
+            currentUser: null
         }
 
-        toggleToken = event => {
-            if(this.state.token) {
-                this.setState({token: null});
-            }
+        handleLogOut = (e) => {
+            axios.get("http://localhost:5555/auth/logout")
+            .then(response => {
+                this.setState({loggedIn: false, currentUser: null});
+            })
+          }
         
+        componentDidMount = async () => {
+            const res = axios.get(currUser, {withCredentials: true})
+            res.then(response => {
+                if(response.data._id) {
+                    this.setState({loggedIn: !this.state.loggedIn, currentUser: response.data}, () => console.log(this.state));
+                }
+            })
+            .catch(err => {
+                console.log(err.message)
+            })
+           
         }
         
         render() {
-            if(this.state.token) {
+            if(this.state.loggedIn) {
                 console.log("logged in")
-                return <FirstComp {...this.props} toggleToken={this.toggleToken} token={this.state.token}/>;
+                return <FirstComp {...this.props} loggedIn={this.state.loggedIn} handleClick={this.handleLogOut}/>;
             } else {
                 console.log("logged out")
                 return <SecondComp {...this.props}/>;

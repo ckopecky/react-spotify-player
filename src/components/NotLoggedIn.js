@@ -1,11 +1,12 @@
 import React from "react";
 
+const endpoint = process.env.REACT_APP_NODE_ENV === 'production' ? process.env.REACT_APP_PROD_AUTHENDPOINT : process.env.REACT_APP_DEV_AUTHENDPOINT
 
 const NotLoggedIn = () => {
   return (
     <a
       className="btn btn--loginApp-link"
-      href={`${process.env.REACT_APP_AUTHENDPOINT}?client_id=${process.env.REACT_APP_CLIENTID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=${process.env.REACT_APP_SCOPES}&response_type=token&show_dialog=true`}
+      href={`${endpoint}/auth/spotify`}
     >
       Login to Spotify
     </a>
