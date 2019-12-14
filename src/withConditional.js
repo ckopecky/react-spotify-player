@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 
-const currUser = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_CURR_USER : process.env.REACT_APP_DEV_CURR_USER
+const currUser = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_CURR_USER : process.env.REACT_APP_DEV_CURR_USER;
+
+const logOutEndpoint = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_LOGOUT : process.env.REACT_APP_DEV_LOGOUT;
 
 const withConditionalRender = FirstComp => SecondComp => 
     class WithConditionalRender extends React.Component {
@@ -11,7 +13,7 @@ const withConditionalRender = FirstComp => SecondComp =>
         }
 
         handleLogOut = (e) => {
-            axios.get("http://localhost:5555/auth/logout")
+            axios.get(logOutEndpoint)
             .then(response => {
                 this.setState({loggedIn: false, currentUser: null});
                 axios.defaults.headers['Authorization'] = null;

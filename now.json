@@ -5,7 +5,8 @@
             "REACT_APP_PROD_AUTHENDPOINT": "@react_app_prod_authendpoint",
             "REACT_APP_NODE_ENV": "@react_app_node_env",
             "NODE_ENV": "@node_env",
-            "REACT_APP_PROD_CURR_USER": "@react_app_prod_curr_user"
+            "REACT_APP_PROD_CURR_USER": "@react_app_prod_curr_user",
+            "REACT_APP_PROD_LOGOUT": "@react_app_prod_logout"
         }
     }
 }
