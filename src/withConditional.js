@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-const currUser = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_CURR_USER.toLowerCase() : process.env.REACT_APP_DEV_CURR_USER
+const currUser = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_CURR_USER : process.env.REACT_APP_DEV_CURR_USER
 
 const withConditionalRender = FirstComp => SecondComp => 
     class WithConditionalRender extends React.Component {

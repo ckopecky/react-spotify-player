@@ -7,7 +7,7 @@ import "./App.css";
 const DynamicComp = withConditionalRender(Player)(NotLoggedIn);
 
 const App = () => {
-  console.log(process.env.react_app_node_env)
+  console.log(process.env.REACT_APP_NODE_ENV || process.env.NODE_ENV)
   return <DynamicComp />;
 };
 
