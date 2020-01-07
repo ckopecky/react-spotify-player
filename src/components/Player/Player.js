@@ -9,13 +9,12 @@ class Player extends React.Component {
   }
 
   componentDidMount = () => {
-        this.getCurrentPlaylists(this.props.currUser.accessToken);
+      this.getCurrentPlaylists(this.props.currentUser.accessToken);
   }
 
   getEmbeddedLink = (type, id) => {
     let baseURL = 'https://open.spotify.com/embed';
     let URL = `${baseURL}/${type}/${id}`;
-    console.log(URL);
     this.setState({url: URL});
   }
 
@@ -49,7 +48,6 @@ class Player extends React.Component {
   render() {
     return (
       <>
-        <div className="btn btn--loginApp-link" onClick={this.props.handleClick}>LOGOUT</div>
         <EmbeddedPlayer toggle={this.toggleDropDown} embeddedLink={this.getEmbeddedLink} url={this.state.url} playerState={this.state} currUser={this.props.currUser}/>
       </>
     )
