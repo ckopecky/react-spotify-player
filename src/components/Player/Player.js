@@ -48,7 +48,7 @@ class Player extends React.Component {
   render() {
     return (
       <>
-        <EmbeddedPlayer toggle={this.toggleDropDown} embeddedLink={this.getEmbeddedLink} url={this.state.url} playerState={this.state} currUser={this.props.currUser}/>
+        <EmbeddedPlayer toggle={this.toggleDropDown} embeddedLink={this.getEmbeddedLink} url={this.state.url} playerState={this.state} currentUser={this.props.currentUser}/>
       </>
     )
   }
