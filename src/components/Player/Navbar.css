@@ -1,0 +1,21 @@
+.navbar {
+    background: var(--burgundy);
+    width: 100%;
+}
+
+.brand {
+    color: var(--apricot);
+    font-family: var(--rocksalt);
+}
+.brand-two {
+    color: var(--offwhite)
+}
+
+.btn {
+    color: var(--offwhite) !important;
+    cursor: pointer;
+}
+
+.btn:hover {
+    color: var(--apricot) !important;
+}
