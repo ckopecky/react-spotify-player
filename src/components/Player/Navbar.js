@@ -9,6 +9,7 @@ const NavBar = (props) => {
                 <NavbarBrand href="/" className="brand mr-auto"><h1>Tune<span className="brand-two">age</span></h1></NavbarBrand>
                 <Link className="btn btn--loginApp-link" to="/account">ACCOUNT SETTINGS</Link>
                 <div className="btn btn--loginApp-link" onClick={(e) => props.handleLogOut(e, props)}>LOGOUT</div>
+                <img className="profile-pic" src={props.currentUser.photos[0]} alt={`${props.currentUser.displayName}`}/>
             </Navbar>
         </div>
     );
