@@ -1,14 +1,81 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import withConditionalRender from "./withConditional";
 import Player from "./components/Player/Player";
 import NotLoggedIn from "./components/NotLoggedIn/NotLoggedIn.js";
 import "./App.css";
+import { withRouter, Switch, Route } from 'react-router-dom';
+import AccountSettings from "./components/AccountSettings/AccountSettings";
+import Navbar from "./components/Player/Navbar";
+import NavbarLoggedOut from "./components/NotLoggedIn/Navbar";
+import axios from 'axios';
+import Dashboard from "./components/Dashboard/Dashboard";
 
+const currUser = process.env.REACT_APP_NODE_ENV === 'production' ? process.env.REACT_APP_PROD_CURR_USER : process.env.REACT_APP_DEV_CURR_USER;
+
+const logOutEndpoint = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_LOGOUT : process.env.REACT_APP_DEV_LOGOUT;
 const DynamicComp = withConditionalRender(Player)(NotLoggedIn);
+const DynamicNavBar = withRouter(withConditionalRender(Navbar)(NavbarLoggedOut));
 
-const App = () => {
-  console.log(process.env.REACT_APP_NODE_ENV || process.env.NODE_ENV)
-  return <DynamicComp />;
-};
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedIn: false,
+      currentUser: null
+    }
+  }
+
+
+  handleLogOut = (e, props) => {
+    axios.get(logOutEndpoint)
+    .then(response => {
+      console.log(response);
+        this.setState({loggedIn: false, currentUser: null});
+        axios.defaults.headers['Authorization'] = null;
+    })
+    props.history.push('/')
+  }
+
+
+componentDidMount = () => {
+  const res = axios.get(currUser, {withCredentials: true})
+  res.then(response => {
+      if(response.data._id) {
+          this.setState({loggedIn: !this.state.loggedIn, currentUser: response.data}, () => console.log(this.state));
+          
+
+      }
+  })
+  .catch(err => {
+      console.log(err.message)
+  })
+
+ 
+}
+
+  render() {
+    return (
+      <>
+      <DynamicNavBar loggedIn={this.state.loggedIn} handleLogOut={this.handleLogOut}/>
+      <Switch>
+        <Route exact path="/" render={(props) => <DynamicComp {...props} loggedIn={this.state.loggedIn} currentUser={this.state.currentUser} handleLogOut={this.handleLogOut}/>} />
+        <Route path="/account" component={AccountSettings} />
+        <Route path="/dashboard" render={(props) => <Dashboard {...props} loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}  handleLogOut={this.handleLogOut}/>} />
+      </Switch>
+      </>
+    )
+  }
+
+}
+
+
+
+
+
+
+
+
+
 
 export default App;
