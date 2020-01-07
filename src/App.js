@@ -1,6 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import withConditionalRender from "./withConditional";
+import { Spinner } from 'reactstrap';
 import Player from "./components/Player/Player";
 import NotLoggedIn from "./components/NotLoggedIn/NotLoggedIn.js";
 import "./App.css";
@@ -22,7 +22,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       loggedIn: false,
-      currentUser: null
+      currentUser: null,
+      loading: true
     }
   }
 
@@ -42,7 +43,8 @@ componentDidMount = () => {
   const res = axios.get(currUser, {withCredentials: true})
   res.then(response => {
       if(response.data._id) {
-          this.setState({loggedIn: !this.state.loggedIn, currentUser: response.data}, () => console.log(this.state));
+        console.log(response.data);
+          this.setState({loggedIn: !this.state.loggedIn, currentUser: response.data, loading: false}, () => console.log(this.state));
           
 
       }
@@ -55,18 +57,27 @@ componentDidMount = () => {
 }
 
   render() {
-    return (
-      <>
-      <DynamicNavBar loggedIn={this.state.loggedIn} handleLogOut={this.handleLogOut}/>
-      <Switch>
-        <Route exact path="/" render={(props) => <DynamicComp {...props} loggedIn={this.state.loggedIn} currentUser={this.state.currentUser} handleLogOut={this.handleLogOut}/>} />
-        <Route path="/account" component={AccountSettings} />
-        <Route path="/dashboard" render={(props) => <Dashboard {...props} loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}  handleLogOut={this.handleLogOut}/>} />
-      </Switch>
-      </>
-    )
+      if(!this.state.loading) {
+        return (
+          <>
+          <DynamicNavBar loggedIn={this.state.loggedIn} currentUser={this.state.currentUser} handleLogOut={this.handleLogOut}/>
+          <Switch>
+            <Route exact path="/" render={(props) => <DynamicComp {...props} loggedIn={this.state.loggedIn} currentUser={this.state.currentUser} handleLogOut={this.handleLogOut}/>} />
+            <Route path="/account" render={(props) => <AccountSettings {...props}  currentUser={this.state.currentUser} />} />
+            <Route path="/dashboard" render={(props) => <Dashboard {...props} loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}  handleLogOut={this.handleLogOut}/>} />
+          </Switch>
+          </>
+        )
+      }
+      else {
+        return (
+          <>
+            <DynamicNavBar loggedIn={this.state.loggedIn} currentUser={this.state.currentUser} handleLogOut={this.handleLogOut}/>
+            <Spinner width="400"/>
+          </>
+        )
+      }
   }
-
 }
 
 
